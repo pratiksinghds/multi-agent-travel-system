@@ -1,0 +1,15 @@
+# Virtual Environment
+langgraph_env3/
+venv/
+env/
+
+# Environment Variables & Secrets (CRITICAL: Do not upload API keys)
+.env
+
+# Python Cache & Bytecode
+__pycache__/
+*.pyc
+
+# OS Files
+.DS_Store
+Thumbs.db
