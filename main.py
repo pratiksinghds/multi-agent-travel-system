@@ -1,6 +1,7 @@
 import os
 from typing import TypedDict , Annotated
 import operator
+import re
 
 import psycopg
 from langgraph.graph import StateGraph, START, END
@@ -40,7 +41,14 @@ class TravelState(TypedDict):
 
 def flight_agent(state: TravelState):
     query = state["user_query"]
-    flight_data = search_flights(query)
+    # Ask the LLM for origin/destination IATA codes so the flight search matches the request
+    codes = llm.invoke([
+        SystemMessage(content="Reply with only the origin and destination airport IATA codes as XXX,YYY. If unknown, reply NONE."),
+        HumanMessage(content=query),
+    ]).content
+    match = re.findall(r"\b[A-Z]{3}\b", re.sub(r"<think>.*?</think>", "", codes, flags=re.DOTALL))
+    dep, arr = (match + [None, None])[:2]
+    flight_data = search_flights(query, dep, arr)
     return{
         "flight_results": flight_data,
         "messages": [
