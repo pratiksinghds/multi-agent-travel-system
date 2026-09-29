@@ -122,7 +122,7 @@ if generate_btn:
         stat1, stat2, stat3 = st.columns(3)
         stat1.metric(label="Active Agents", value="4")
         stat2.metric(label="LLM Calls Tracked", value=str(total_calls))
-        stat3.metric(label="Checkpointer State", value="Persisted in Postgres")
+        stat3.metric(label="Checkpointer State", value="Persisted in Postgres" if os.getenv("DATABASE_URL") else "In-memory session")
 
         # --- Final Generated Travel Plan ---
         st.subheader("📋 Final Travel Plan")

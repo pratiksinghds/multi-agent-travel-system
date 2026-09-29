@@ -5,6 +5,7 @@ import operator
 import psycopg
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.postgres import PostgresSaver
+from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import (
     AnyMessage,
     HumanMessage,
@@ -125,9 +126,14 @@ graph.add_edge("hotel_agent", "itinerary_agent")
 graph.add_edge("itinerary_agent", "final_agent")
 graph.add_edge("final_agent", END)
 
-_conn= psycopg.connect(DATABASE_URL, autocommit=True)
-checkpointer = PostgresSaver(_conn)
-checkpointer.setup()
+# Use PostgreSQL for persistent memory when DATABASE_URL is set;
+# otherwise fall back to in-memory checkpoints (e.g. on Streamlit Cloud).
+if DATABASE_URL:
+    _conn = psycopg.connect(DATABASE_URL, autocommit=True)
+    checkpointer = PostgresSaver(_conn)
+    checkpointer.setup()
+else:
+    checkpointer = MemorySaver()
 
 
 app = graph.compile(checkpointer=checkpointer)
