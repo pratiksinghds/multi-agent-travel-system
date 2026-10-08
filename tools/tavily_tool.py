@@ -4,6 +4,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Limit results to hotel booking and review sites so the agent gets real hotels,
+# not tour packages or social media posts
+HOTEL_SITES = [
+    "booking.com",
+    "tripadvisor.com",
+    "tripadvisor.in",
+    "agoda.com",
+    "makemytrip.com",
+    "goibibo.com",
+    "hotels.com",
+    "expedia.co.in",
+]
 
 def tavily_search(query):
     # Create the client on each call so the latest TAVILY_API_KEY from secrets is used
@@ -14,7 +26,8 @@ def tavily_search(query):
     try:
         response = TavilyClient(api_key=api_key).search(
             query=query,
-            max_results=5
+            max_results=5,
+            include_domains=HOTEL_SITES,
         )
     except Exception:
         # Network errors or API outages should not crash the whole travel plan
