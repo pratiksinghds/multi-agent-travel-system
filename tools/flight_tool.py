@@ -4,13 +4,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv("AVIATIONSTACK_API_KEY")
 URL = "http://api.aviationstack.com/v1/flights"
 
 
 def _fetch(dep_iata=None, arr_iata=None):
     """Return (flights, error) for one AviationStack query."""
-    params = {"access_key": API_KEY, "limit": 5}
+    # Read the key on every call so a key added in Streamlit secrets works without a restart
+    api_key = os.getenv("AVIATIONSTACK_API_KEY")
+    if not api_key:
+        return [], "AVIATIONSTACK_API_KEY is not set"
+    params = {"access_key": api_key, "limit": 5}
     if dep_iata:
         params["dep_iata"] = dep_iata
     if arr_iata:
