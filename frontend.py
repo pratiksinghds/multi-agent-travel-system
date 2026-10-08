@@ -45,21 +45,21 @@ with img_col1:
     st.image(
         "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=700&q=80",
         caption="Tokyo, Japan",
-        use_container_width=True
+        width="stretch"
     )
 
 with img_col2:
     st.image(
         "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=700&q=80",
         caption="Kyoto, Japan",
-        use_container_width=True
+        width="stretch"
     )
 
 with img_col3:
     st.image(
         "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=700&q=80",
         caption="Mount Fuji, Japan",
-        use_container_width=True
+        width="stretch"
     )
 
 st.markdown("---")
@@ -68,7 +68,7 @@ st.markdown("---")
 default_prompt = "Plan a complete 7 days Japan trip including flights, hotels and sightseeing under 2 lakh"
 user_prompt = st.text_area("Enter your travel requirement:", value=default_prompt, height=90)
 
-generate_btn = st.button("Generate My Travel Plan", type="primary", use_container_width=True)
+generate_btn = st.button("Generate My Travel Plan", type="primary", width="stretch")
 
 # --- Graph Stream & Results ---
 if generate_btn:
@@ -140,5 +140,5 @@ if generate_btn:
             data=final_text,
             file_name="travel_itinerary.txt",
             mime="text/plain",
-            use_container_width=True
+            width="stretch"
         )
