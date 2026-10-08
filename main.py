@@ -62,18 +62,19 @@ def hotel_agent(state: TravelState):
     query= f"Best hotels for {state['user_query']}"
     hotel_results = tavily_search(query)
 
+    # Web search only, no LLM call, so llm_calls is left unchanged
     return {
         "hotel_results": hotel_results,
         "messages": [
             AIMessage(content="Hotel information fetched")
         ],
-        "llm_calls": state.get("llm_calls",0) + 1
     }
 
 def itinerary_agent(state: TravelState):
 
     prompt = f"""
-    Create a concise, brief 7-day travel itinerary (bullet points only, max 200 words).
+    Create a concise day-by-day travel itinerary for the trip length in the user's request
+    (if no length is given, plan 3 days). Bullet points only, max 200 words.
     User Query:
     {state['user_query']}
 
