@@ -2,6 +2,12 @@
 
 An autonomous, multi-agent AI travel planning platform built with **LangGraph**, **Groq (Qwen/Llama)**, and **PostgreSQL**. The system coordinates specialized agents to search real-time flight schedules, curate hotel stays, generate day-by-day itineraries, and assemble complete trip packages within custom budgets.
 
+**Live demo:** https://pratik-travel-planner.streamlit.app/
+
+![Agent pipeline running](Screenshot%202026-09-13%20185451.png)
+
+![Final travel plan](Screenshot%202026-09-13%20185506.png)
+
 ---
 
 ## 🏗️ System Architecture
