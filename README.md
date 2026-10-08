@@ -31,9 +31,36 @@ The graph workflow orchestrates four discrete agents with persistent PostgreSQL 
 
 ---
 
-## 🛠️ Setup & Installation
+## 🛠️ Run it locally
 
-### 1. Clone the Repository
 ```bash
-git clone [https://github.com/](https://github.com/)pratiksinghds/multi-agent-travel-system.git
+git clone https://github.com/pratiksinghds/multi-agent-travel-system.git
 cd multi-agent-travel-system
+pip install -r requirements.txt
+```
+
+Create a `.env` file in the project folder:
+
+```env
+GROQ_API_KEY=your_groq_key
+TAVILY_API_KEY=your_tavily_key
+AVIATIONSTACK_API_KEY=your_aviationstack_key
+# Optional: persist sessions in PostgreSQL. Without it, memory is kept in-process.
+DATABASE_URL=postgresql://user:password@localhost:5432/travel
+```
+
+Start the app:
+
+```bash
+streamlit run frontend.py
+```
+
+You can also run the graph from the terminal with `python main.py`.
+
+---
+
+## 💡 Design notes
+
+* **Airport codes from free text:** the flight agent asks the LLM for origin and destination IATA codes, then queries AviationStack with them, with a fallback when no codes are found.
+* **Memory that works anywhere:** sessions are checkpointed in PostgreSQL when `DATABASE_URL` is set, and fall back to in-memory checkpoints on Streamlit Cloud.
+* **Free-tier friendly:** output length is capped per agent so a full plan fits within Groq's free limits.
