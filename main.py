@@ -59,15 +59,26 @@ def flight_agent(state: TravelState):
 
 
 def hotel_agent(state: TravelState):
-    query= f"Best hotels for {state['user_query']}"
+    # Ask the LLM for just the destination city so the hotel search isn't polluted
+    # by words like "flights", "trip" or the origin city
+    city = llm.invoke([
+        SystemMessage(content="Reply with only the destination city name for this travel request, nothing else."),
+        HumanMessage(content=state["user_query"]),
+    ]).content
+    city = re.sub(r"<think>.*?</think>", "", city, flags=re.DOTALL).strip()
+    city = city.splitlines()[0].strip(" .\"'")[:60] if city else ""
+    if not city:
+        city = state["user_query"]
+
+    query = f"best hotels to stay in {city} with price per night"
     hotel_results = tavily_search(query)
 
-    # Web search only, no LLM call, so llm_calls is left unchanged
     return {
         "hotel_results": hotel_results,
         "messages": [
-            AIMessage(content="Hotel information fetched")
+            AIMessage(content=f"Hotel information fetched for {city}")
         ],
+        "llm_calls": state.get("llm_calls",0) + 1
     }
 
 def itinerary_agent(state: TravelState):
